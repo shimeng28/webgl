@@ -5,7 +5,7 @@ const CleanWebpackPlugin = require("clean-webpack-plugin");
 
 const entryBaseDir = path.resolve(__dirname, "./pages");
 const pages = fs.readdirSync(entryBaseDir);
-
+pages.pop();
 // entries
 const entryMap = {};
 pages.forEach(function(page) {
@@ -26,6 +26,13 @@ const config = {
   	path: path.resolve(__dirname, "dist")
   },
   plugins: [
+    new HtmlWebpackPlugin({
+      title: "3D 机械建模",
+      template: "./pages/index.html",
+      filename: "index.html",
+      chunks: []
+    }),
+    new CleanWebpackPlugin(["dist"])
   ],
   module: {
     rules: [
@@ -47,11 +54,12 @@ const config = {
 }
 
 pages.forEach(function(page) {
-  const htmlName = page + "/" + page + ".html"; 
+  const htmlName = page + ".html"; 
   const conf = {
-  	title: page,
+    title: page,
+    template: "pages/" + page + "/" + page + ".html",
     filename: htmlName,
-    template: "./pages/" + page + "/" + page + ".html",
+    chunks: [page]
   };
   config.plugins.push(new HtmlWebpackPlugin(conf));	
 });
